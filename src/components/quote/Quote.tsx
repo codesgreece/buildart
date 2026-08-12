@@ -27,7 +27,10 @@ export function Quote() {
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>(
     {},
   );
-  const [status, setStatus] = useState<"idle" | "ready" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "ready" | "error" | "failed"
+  >("idle");
+  const [serverError, setServerError] = useState("");
 
   const interests = useMemo(
     () => PRODUCTS.filter((p) => selected.includes(p.id)),
@@ -47,22 +50,45 @@ export function Quote() {
     return Object.keys(next).length === 0;
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setServerError("");
+
     if (!validate()) {
       setStatus("error");
       return;
     }
 
-    // Frontend-only integration point — no backend yet.
-    // Replace with API / form service when available.
-    const payload = {
-      ...form,
-      interests: interests.map((i) => i.id),
-      interestLabels: interests.map((i) => i.title),
-    };
-    console.info("[BUILDART quote payload]", payload);
-    setStatus("ready");
+    setStatus("sending");
+
+    try {
+      const res = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          interests: interests.map((i) => i.id),
+          interestLabels: interests.map((i) => i.title),
+        }),
+      });
+
+      const data = (await res.json()) as { ok?: boolean; error?: string };
+
+      if (!res.ok || !data.ok) {
+        setServerError(
+          data.error || "Η αποστολή απέτυχε. Δοκίμασε ξανά σε λίγο.",
+        );
+        setStatus("failed");
+        return;
+      }
+
+      setForm(INITIAL);
+      setErrors({});
+      setStatus("ready");
+    } catch {
+      setServerError("Πρόβλημα σύνδεσης. Έλεγξε το internet και δοκίμασε ξανά.");
+      setStatus("failed");
+    }
   };
 
   return (
@@ -177,20 +203,27 @@ export function Quote() {
             />
           </label>
 
-          <button type="submit" className="ba-button mt-8 w-full sm:w-auto focus-ring">
-            Αποστολή αιτήματος
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            className="ba-button mt-8 w-full touch-manipulation focus-ring disabled:cursor-wait disabled:opacity-60 sm:w-auto"
+          >
+            {status === "sending" ? "Αποστολή…" : "Αποστολή αιτήματος"}
           </button>
 
           {status === "ready" && (
             <p className="mt-4 text-sm text-[var(--ba-accent)]" role="status">
-              Το αίτημα είναι έτοιμο τοπικά. Η online αποστολή θα ενεργοποιηθεί
-              όταν συνδεθεί το σύστημα επικοινωνίας. Μπορείς να καλέσεις στο{" "}
-              {CONTACT.phoneDisplay}.
+              Το αίτημα στάλθηκε. Θα επικοινωνήσουμε μαζί σου σύντομα.
             </p>
           )}
           {status === "error" && (
             <p className="mt-4 text-sm text-[var(--ba-ember)]" role="alert">
               Έλεγξε τα υποχρεωτικά πεδία.
+            </p>
+          )}
+          {status === "failed" && (
+            <p className="mt-4 text-sm text-[var(--ba-ember)]" role="alert">
+              {serverError} Μπορείς επίσης να καλέσεις στο {CONTACT.phoneDisplay}.
             </p>
           )}
         </form>
