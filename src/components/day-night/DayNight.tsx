@@ -27,9 +27,11 @@ export function DayNight() {
           : "Νύχτα";
 
   const night = time >= 0.78;
+  const ink = time > 0.65 ? "text-white" : "text-[var(--ba-ink)]";
+  const muted = time > 0.65 ? "text-white/50" : "text-[var(--ba-muted)]";
 
   return (
-    <section className="relative overflow-hidden border-t border-[var(--ba-line)] py-16 sm:py-20">
+    <section className="relative overflow-hidden border-t border-[var(--ba-line)] py-10 sm:py-12">
       <div
         className="absolute inset-0 transition-[background] duration-500"
         style={{
@@ -44,23 +46,17 @@ export function DayNight() {
         }}
       />
 
-      <div className="section-pad relative z-10 mx-auto max-w-[1100px]">
-        <div
-          className={`mb-6 max-w-2xl transition-colors duration-500 sm:mb-7 ${
-            time > 0.65 ? "text-white" : "text-[var(--ba-ink)]"
-          }`}
-        >
-          <p className={`eyebrow mb-2 ${time > 0.65 ? "!text-white/50" : ""}`}>
+      <div className="section-pad relative z-10 mx-auto max-w-[900px]">
+        <div className={`mb-3 text-center transition-colors duration-500 sm:mb-4 ${ink}`}>
+          <p className={`eyebrow mb-1.5 ${time > 0.65 ? "!text-white/50" : ""}`}>
             Ολοήμερη κατοικία
           </p>
-          <h2 className="headline-lg">
-            Από το πρωί
-            <br />
-            μέχρι το βράδυ.
+          <h2 className="font-display text-[clamp(1.45rem,3.4vw,2.2rem)] leading-[1.1] tracking-[-0.03em]">
+            Από το πρωί μέχρι το βράδυ.
           </h2>
         </div>
 
-        <div className="relative mx-auto max-w-2xl">
+        <div className="relative mx-auto max-w-[420px] sm:max-w-[480px]">
           <ArchitecturalHouse
             progress={1}
             timeOfDay={time}
@@ -75,25 +71,20 @@ export function DayNight() {
               "klimatismos",
             ]}
             idPrefix="daynight"
+            className="mx-auto max-h-[38vh] w-full"
           />
         </div>
 
-        <div className="mx-auto mt-6 max-w-xl sm:mt-7">
-          <div className="mb-2 flex justify-between font-mono-arch text-[10px] tracking-[0.22em] uppercase">
-            <span className={time > 0.65 ? "text-white/50" : "text-[var(--ba-muted)]"}>
-              Πρωί
-            </span>
-            <span className={time > 0.65 ? "text-white" : "text-[var(--ba-ink)]"}>
-              {label}
-            </span>
-            <span className={time > 0.65 ? "text-white/50" : "text-[var(--ba-muted)]"}>
-              Νύχτα
-            </span>
+        <div className="mx-auto mt-4 max-w-md sm:mt-5">
+          <div className="mb-1.5 flex justify-between font-mono-arch text-[10px] tracking-[0.22em] uppercase">
+            <span className={muted}>Πρωί</span>
+            <span className={ink}>{label}</span>
+            <span className={muted}>Νύχτα</span>
           </div>
 
           <div
             ref={trackRef}
-            className="relative h-11 touch-none select-none sm:h-10"
+            className="relative h-10 touch-none select-none"
             onPointerDown={(e) => {
               e.preventDefault();
               dragging.current = true;
@@ -126,9 +117,8 @@ export function DayNight() {
                 time > 0.65 ? "bg-white/30" : "bg-[var(--ba-line-strong)]"
               }`}
             />
-            {/* Sun handle */}
             <div
-              className="absolute top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full border-2"
+              className="absolute top-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 sm:h-8 sm:w-8"
               style={{
                 left: `${time * 100}%`,
                 background:
@@ -147,17 +137,13 @@ export function DayNight() {
 
         <motion.div
           initial={false}
-          animate={{ opacity: night ? 1 : 0, y: night ? 0 : 10 }}
-          transition={{ duration: 0.7, ease: EASE_PHYSICAL }}
-          className="mx-auto mt-7 max-w-lg text-center text-white sm:mt-8"
+          animate={{ opacity: night ? 1 : 0, y: night ? 0 : 8 }}
+          transition={{ duration: 0.55, ease: EASE_PHYSICAL }}
+          className="mx-auto mt-4 max-w-lg text-center text-white sm:mt-5"
           aria-hidden={!night}
         >
-          <p className="font-display text-[clamp(1.3rem,2.6vw,1.9rem)] tracking-tight">
-            Ένα σπίτι.
-            <br />
-            Όλες οι λύσεις.
-            <br />
-            BUILDART.
+          <p className="font-display text-[clamp(1.1rem,2.2vw,1.5rem)] tracking-tight">
+            Ένα σπίτι. Όλες οι λύσεις. BUILDART.
           </p>
         </motion.div>
       </div>
