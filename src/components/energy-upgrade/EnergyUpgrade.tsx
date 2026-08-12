@@ -28,6 +28,7 @@ export function EnergyUpgrade() {
   }, []);
 
   const onPointerDown = (e: React.PointerEvent) => {
+    e.preventDefault();
     dragging.current = true;
     e.currentTarget.setPointerCapture(e.pointerId);
     updateFromClientX(e.clientX);
@@ -63,7 +64,7 @@ export function EnergyUpgrade() {
 
         <div
           ref={trackRef}
-          className="relative aspect-[16/9] max-h-[52vh] touch-none overflow-hidden border border-[var(--ba-line)] bg-[var(--ba-concrete)] select-none"
+          className="relative aspect-[16/10] max-h-[min(52vh,420px)] w-full touch-none overflow-hidden border border-[var(--ba-line)] bg-[var(--ba-concrete)] select-none sm:aspect-[16/9]"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
@@ -143,7 +144,7 @@ export function EnergyUpgrade() {
           </div>
         </div>
 
-        <div className="mt-5 grid gap-3 sm:grid-cols-4">
+        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
           <Metric
             label="Θερμικές απώλειες"
             value={loss > 55 ? "Υψηλές" : loss > 30 ? "Μέτριες" : "Χαμηλές"}
@@ -182,9 +183,9 @@ function Metric({
   active: number;
 }) {
   return (
-    <div className="border border-[var(--ba-line)] px-3 py-3">
-      <p className="eyebrow mb-1.5">{label}</p>
-      <p className="font-display text-lg tracking-tight">{value}</p>
+    <div className="border border-[var(--ba-line)] px-2.5 py-2.5 sm:px-3 sm:py-3">
+      <p className="eyebrow mb-1.5 text-[0.62rem] leading-tight sm:text-[0.7rem]">{label}</p>
+      <p className="font-display text-base tracking-tight sm:text-lg">{value}</p>
       <div className="mt-2 h-px bg-[var(--ba-line)]">
         <div
           className="h-full bg-[var(--ba-accent)] transition-[width] duration-200"

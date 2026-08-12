@@ -35,14 +35,14 @@ export function Navigation({ visible }: { visible: boolean }) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: EASE_PHYSICAL, delay: 0.15 }}
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-[background,border-color,backdrop-filter] duration-500",
+          "fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)] transition-[background,border-color,backdrop-filter] duration-500",
           scrolled
             ? "border-b border-[var(--ba-line)] bg-[color-mix(in_srgb,var(--ba-bg)_88%,transparent)] backdrop-blur-md"
             : "bg-transparent",
         )}
       >
-        <div className="section-pad mx-auto flex h-[4.25rem] max-w-[1400px] items-center justify-between">
-          <a href="#hero" className="focus-ring" aria-label="BUILDART αρχική">
+        <div className="section-pad mx-auto flex h-14 max-w-[1400px] items-center justify-between sm:h-[4.25rem]">
+          <a href="#hero" className="focus-ring min-h-11 min-w-11 touch-manipulation" aria-label="BUILDART αρχική">
             <BuildartLogo />
           </a>
 
@@ -59,7 +59,7 @@ export function Navigation({ visible }: { visible: boolean }) {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <MagneticLink
               href="#epikoinonia"
               className="hidden !px-4 !py-2.5 sm:inline-flex"
@@ -69,7 +69,7 @@ export function Navigation({ visible }: { visible: boolean }) {
 
             <button
               type="button"
-              className="relative flex h-11 w-11 items-center justify-center focus-ring lg:hidden"
+              className="relative flex h-11 w-11 touch-manipulation items-center justify-center focus-ring lg:hidden"
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? "Κλείσιμο μενού" : "Άνοιγμα μενού"}
@@ -106,9 +106,9 @@ export function Navigation({ visible }: { visible: boolean }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-[var(--ba-bg)] lg:hidden"
+            className="fixed inset-0 z-40 overflow-y-auto overscroll-contain bg-[var(--ba-bg)] pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] lg:hidden"
           >
-            <div className="section-pad flex h-full flex-col justify-center gap-2 pt-20">
+            <div className="section-pad flex min-h-full flex-col justify-center gap-1 py-24">
               {NAV_LINKS.map((link, i) => (
                 <motion.a
                   key={link.href}
@@ -117,7 +117,7 @@ export function Navigation({ visible }: { visible: boolean }) {
                   initial={{ y: 24, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.05 * i, ease: EASE_PHYSICAL }}
-                  className="font-display text-[clamp(2rem,10vw,3.5rem)] tracking-tight border-b border-[var(--ba-line)] py-3"
+                  className="touch-manipulation border-b border-[var(--ba-line)] py-3.5 font-display text-[clamp(1.75rem,9vw,3.25rem)] tracking-tight"
                 >
                   {link.label}
                 </motion.a>
@@ -125,7 +125,7 @@ export function Navigation({ visible }: { visible: boolean }) {
               <a
                 href="#epikoinonia"
                 onClick={() => setOpen(false)}
-                className="ba-button mt-8 w-fit focus-ring"
+                className="ba-button mt-8 w-full touch-manipulation justify-center focus-ring sm:w-fit"
               >
                 Ζήτησε προσφορά
               </a>

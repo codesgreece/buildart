@@ -60,7 +60,7 @@ export function HouseConfigurator() {
                       onClick={() => toggle(product.id)}
                       aria-pressed={active}
                       className={cn(
-                        "group flex w-full items-center justify-between gap-4 py-3 text-left transition-colors focus-ring",
+                        "group flex w-full touch-manipulation items-center justify-between gap-3 py-3.5 text-left transition-colors focus-ring sm:gap-4 sm:py-3",
                         active ? "text-[var(--ba-ink)]" : "text-[var(--ba-muted)]",
                       )}
                     >

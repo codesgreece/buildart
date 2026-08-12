@@ -194,19 +194,19 @@ export function ConstructionLoader({ onComplete }: ConstructionLoaderProps) {
 
   const bindHold = {
     onPointerDown: (e: React.PointerEvent) => {
+      e.preventDefault();
       e.currentTarget.setPointerCapture(e.pointerId);
       start();
     },
     onPointerUp: stop,
     onPointerCancel: stop,
-    onPointerLeave: stop,
   };
 
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden"
-        style={{ background: "var(--ba-bg)" }}
+        className="fixed inset-0 z-[100] flex touch-none select-none flex-col items-center justify-center overflow-hidden overscroll-none"
+        style={{ background: "var(--ba-bg)", WebkitUserSelect: "none" }}
         initial={{ opacity: 1 }}
         animate={
           exiting
@@ -226,13 +226,13 @@ export function ConstructionLoader({ onComplete }: ConstructionLoaderProps) {
         <div className="noise-overlay" />
         <div className="absolute inset-0 arch-grid opacity-40" />
 
-        <div className="pointer-events-none absolute inset-x-8 top-10 flex justify-between text-[10px] tracking-[0.25em] text-[var(--ba-muted)] font-mono-arch uppercase">
+        <div className="pointer-events-none absolute inset-x-4 top-[max(1.5rem,env(safe-area-inset-top))] flex justify-between gap-2 text-[9px] tracking-[0.18em] text-[var(--ba-muted)] font-mono-arch uppercase sm:inset-x-8 sm:top-10 sm:text-[10px] sm:tracking-[0.25em]">
           <span>BUILDART / 1985</span>
-          <span>{stageLabel}</span>
+          <span className="truncate">{stageLabel}</span>
           <span>{String(pct).padStart(3, "0")}%</span>
         </div>
 
-        <div className="relative w-full max-w-[720px] px-6">
+        <div className="relative w-full max-w-[720px] px-4 sm:px-6">
           <motion.div
             animate={{
               rotate: holding ? hammer * -42 : -12,
@@ -241,10 +241,12 @@ export function ConstructionLoader({ onComplete }: ConstructionLoaderProps) {
             }}
             transition={{ type: "spring", stiffness: 520, damping: 26 }}
             style={{ transformOrigin: "28% 78%" }}
-            className="pointer-events-none absolute -right-1 top-4 z-20 hidden sm:block md:right-6"
+            className="pointer-events-none absolute right-2 top-0 z-20 sm:-right-1 sm:top-4 md:right-6"
             aria-hidden
           >
-            <HammerIcon active={holding} striking={holding && hammer > 0.7} />
+            <div className="scale-[0.72] sm:scale-100">
+              <HammerIcon active={holding} striking={holding && hammer > 0.7} />
+            </div>
           </motion.div>
 
           <ArchitecturalHouse
@@ -309,7 +311,7 @@ export function ConstructionLoader({ onComplete }: ConstructionLoaderProps) {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col items-center gap-3 px-6 text-center">
+          <div className="mt-6 flex flex-col items-center gap-3 px-4 text-center sm:mt-8 sm:px-6">
           {!completed ? (
             <>
               <p className="hold-hint text-[var(--ba-ink)]">
@@ -332,7 +334,7 @@ export function ConstructionLoader({ onComplete }: ConstructionLoaderProps) {
               className="flex flex-col items-center gap-4"
             >
               <BuildartLogo />
-              <p className="font-display text-2xl tracking-tight">
+              <p className="font-display text-xl tracking-tight sm:text-2xl">
                 Από τα θεμέλια μέχρι την ολοκλήρωση.
               </p>
             </motion.div>
@@ -342,7 +344,7 @@ export function ConstructionLoader({ onComplete }: ConstructionLoaderProps) {
         {reduced && (
           <button
             type="button"
-            className="ba-button mt-8 focus-ring"
+            className="ba-button mt-8 touch-manipulation focus-ring"
             onClick={finish}
           >
             Είσοδος
@@ -351,8 +353,11 @@ export function ConstructionLoader({ onComplete }: ConstructionLoaderProps) {
 
         <button
           type="button"
-          className="absolute bottom-6 right-6 px-2 py-1 text-[10px] tracking-[0.2em] uppercase text-[var(--ba-muted)] focus-ring"
-          onClick={finish}
+          className="absolute bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 min-h-11 touch-manipulation px-3 py-2 text-[10px] tracking-[0.2em] uppercase text-[var(--ba-muted)] focus-ring sm:right-6"
+          onClick={(e) => {
+            e.stopPropagation();
+            finish();
+          }}
         >
           Παράλειψη
         </button>

@@ -137,12 +137,12 @@ export function Fireplace() {
   const bind = {
     onPointerDown: (e: React.PointerEvent) => {
       if (completed || reduced) return;
+      e.preventDefault();
       e.currentTarget.setPointerCapture(e.pointerId);
       start();
     },
     onPointerUp: stop,
     onPointerCancel: stop,
-    onLostPointerCapture: stop,
   };
 
   return (
@@ -213,7 +213,7 @@ export function Fireplace() {
 
           <div
             {...bind}
-            className="group relative mx-auto w-full max-w-lg cursor-pointer touch-none select-none focus-ring lg:max-w-none"
+            className="group relative mx-auto w-full max-w-lg touch-none select-none focus-ring lg:max-w-none"
             role="button"
             tabIndex={0}
             aria-label={

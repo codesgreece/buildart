@@ -93,8 +93,9 @@ export function DayNight() {
 
           <div
             ref={trackRef}
-            className="relative h-10 touch-none"
+            className="relative h-11 touch-none select-none sm:h-10"
             onPointerDown={(e) => {
+              e.preventDefault();
               dragging.current = true;
               e.currentTarget.setPointerCapture(e.pointerId);
               update(e.clientX);
@@ -104,6 +105,9 @@ export function DayNight() {
               update(e.clientX);
             }}
             onPointerUp={() => {
+              dragging.current = false;
+            }}
+            onPointerCancel={() => {
               dragging.current = false;
             }}
             role="slider"

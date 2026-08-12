@@ -151,7 +151,7 @@ export function Quote() {
                     onClick={() => toggle(p.id)}
                     aria-pressed={active}
                     className={cn(
-                      "border px-3 py-2 text-xs tracking-[0.08em] transition-colors focus-ring",
+                      "min-h-11 touch-manipulation border px-3 py-2.5 text-xs tracking-[0.08em] transition-colors focus-ring",
                       active
                         ? "border-[var(--ba-accent)] bg-[var(--ba-accent)] text-white"
                         : "border-white/20 text-white/70 hover:border-white/50",

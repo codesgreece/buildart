@@ -120,7 +120,7 @@ export function ConstructionStory() {
       className="relative bg-[var(--ba-bg)]"
       aria-label="Η κατασκευή καθώς κάνετε scroll"
     >
-      <div className="section-pad mx-auto grid max-w-[1400px] gap-8 py-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12 lg:py-20">
+      <div className="section-pad mx-auto grid max-w-[1400px] gap-8 py-12 sm:py-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12 lg:py-20">
         <div className="lg:sticky lg:top-24 lg:self-start">
           <p className="eyebrow mb-3">Η κατασκευή συνεχίζεται</p>
           <ArchitecturalHouse
@@ -137,12 +137,12 @@ export function ConstructionStory() {
           <p className="body-lg mt-2 max-w-md text-[0.95rem]">{step.body}</p>
         </div>
 
-        <div className="flex flex-col gap-[32vh] pb-[16vh] pt-4">
+        <div className="flex flex-col gap-[18vh] pb-10 pt-2 sm:gap-[26vh] sm:pb-[12vh] sm:pt-4 lg:gap-[32vh] lg:pb-[16vh]">
           {STEPS.map((s, i) => (
             <article
               key={s.id}
               data-story-step
-              className={`max-w-lg border-l pl-5 transition-colors duration-500 ${
+              className={`max-w-lg border-l pl-4 transition-colors duration-500 sm:pl-5 ${
                 i === active
                   ? "border-[var(--ba-accent)]"
                   : "border-[var(--ba-line)]"

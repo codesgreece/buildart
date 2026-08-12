@@ -116,11 +116,11 @@ function DoorPortal({
       aria-pressed={selected}
       aria-label={`Βήμα ${index + 1}: ${title}`}
       className={cn(
-        "group relative flex flex-1 flex-col items-center gap-2 focus-ring",
+        "group relative flex min-h-[44px] w-full touch-manipulation flex-col items-center gap-1.5 focus-ring sm:gap-2",
         "min-w-0",
       )}
     >
-      <div className="relative flex h-[130px] w-full max-w-[96px] items-end justify-center sm:h-[150px] sm:max-w-[110px]">
+      <div className="relative flex h-[96px] w-full max-w-[76px] items-end justify-center sm:h-[150px] sm:max-w-[110px]">
         {/* Portal frame */}
         <svg
           viewBox="0 0 100 160"
@@ -204,7 +204,7 @@ function DoorPortal({
       <div className="text-center">
         <p
           className={cn(
-            "font-display text-base tracking-tight transition-colors sm:text-lg",
+            "font-display text-[0.95rem] tracking-tight transition-colors sm:text-lg",
             selected ? "text-white" : "text-white/45 group-hover:text-white/75",
           )}
         >
@@ -212,8 +212,8 @@ function DoorPortal({
         </p>
         <span
           className={cn(
-            "mx-auto mt-1.5 block h-px w-8 transition-all duration-500",
-            selected ? "w-11 bg-[var(--ba-accent)]" : "bg-white/15 group-hover:bg-white/30",
+            "mx-auto mt-1 block h-px w-6 transition-all duration-500 sm:mt-1.5 sm:w-8",
+            selected ? "w-9 bg-[var(--ba-accent)] sm:w-11" : "bg-white/15 group-hover:bg-white/30",
           )}
         />
       </div>
@@ -252,7 +252,7 @@ export function PortfolioDoor() {
 
               <button
                 type="button"
-                className="group relative mx-auto flex h-[210px] w-full max-w-xl touch-manipulation items-center justify-center overflow-hidden border border-white/10 focus-ring sm:h-[240px]"
+                className="group relative mx-auto flex h-[180px] w-full max-w-md touch-manipulation items-center justify-center overflow-hidden border border-white/10 focus-ring sm:h-[240px] sm:max-w-xl"
                 onClick={() => setOpen(true)}
                 onPointerMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -314,17 +314,17 @@ export function PortfolioDoor() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.9, ease: EASE_PHYSICAL }}
             >
-              <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+              <div className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-4">
                 <div>
                   <p className="eyebrow mb-2 !text-white/45">Η διαδικασία μας</p>
-                  <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] leading-[1.05] tracking-[-0.03em] text-white">
+                  <h2 className="font-display text-[clamp(1.5rem,5vw,2.75rem)] leading-[1.05] tracking-[-0.03em] text-white">
                     Μελέτη → Παράδοση
                   </h2>
                 </div>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="ba-button-light ba-button focus-ring !px-4 !py-2"
+                  className="ba-button-light ba-button focus-ring !px-4 !py-2.5 touch-manipulation self-start sm:self-auto"
                 >
                   Κλείσε την πόρτα
                 </button>
@@ -332,13 +332,13 @@ export function PortfolioDoor() {
 
               {/* Corridor of portals */}
               <div className="relative">
-                <div className="pointer-events-none absolute inset-x-[8%] top-[38%] h-px bg-gradient-to-r from-transparent via-white/20 to-transparent sm:top-[40%]" />
+                <div className="pointer-events-none absolute inset-x-[6%] top-[36%] hidden h-px bg-gradient-to-r from-transparent via-white/20 to-transparent sm:block sm:top-[40%]" />
                 <motion.div
-                  className="pointer-events-none absolute top-[38%] h-px bg-[var(--ba-accent)] sm:top-[40%]"
-                  initial={{ width: "0%", left: "8%" }}
+                  className="pointer-events-none absolute top-[36%] hidden h-px bg-[var(--ba-accent)] sm:block sm:top-[40%]"
+                  initial={{ width: "0%", left: "6%" }}
                   animate={{
-                    width: `${(active / Math.max(STEPS.length - 1, 1)) * 84}%`,
-                    left: "8%",
+                    width: `${(active / Math.max(STEPS.length - 1, 1)) * 88}%`,
+                    left: "6%",
                   }}
                   transition={{ duration: 0.55, ease: EASE_PHYSICAL }}
                   style={{
@@ -346,11 +346,11 @@ export function PortfolioDoor() {
                   }}
                 />
 
-                <div className="relative z-10 flex items-end justify-between gap-2 sm:gap-3">
+                <div className="relative z-10 grid grid-cols-2 gap-3 sm:flex sm:items-end sm:justify-between sm:gap-3">
                   {STEPS.map((s, i) => (
                     <motion.div
                       key={s.id}
-                      className="flex-1"
+                      className="min-w-0 sm:flex-1"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{

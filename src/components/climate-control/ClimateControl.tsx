@@ -31,6 +31,7 @@ export function ClimateControl() {
   }, []);
 
   const onPointerDown = (e: React.PointerEvent) => {
+    e.preventDefault();
     dragging.current = true;
     e.currentTarget.setPointerCapture(e.pointerId);
     setFromAngle(e.clientX, e.clientY);
@@ -93,7 +94,7 @@ export function ClimateControl() {
         <div className="mx-auto flex max-w-md flex-col items-center">
           <div
             ref={dialRef}
-            className="relative h-52 w-52 touch-none sm:h-60 sm:w-60"
+            className="relative h-52 w-52 touch-none select-none sm:h-60 sm:w-60"
             onPointerDown={onPointerDown}
             onPointerMove={(e) => {
               if (!dragging.current) return;
@@ -183,13 +184,13 @@ export function ClimateControl() {
             </div>
           </div>
 
-          <div className="mt-4 flex gap-2">
+          <div className="mt-4 flex flex-wrap justify-center gap-1 sm:gap-2">
             {TEMPS.map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => setTemp(t)}
-                className={`focus-ring px-2 py-1 font-mono-arch text-xs tracking-wider ${
+                className={`min-h-10 min-w-10 touch-manipulation focus-ring px-2 py-1.5 font-mono-arch text-xs tracking-wider ${
                   t === temp
                     ? "text-[var(--ba-accent)]"
                     : "text-[var(--ba-muted)]"
