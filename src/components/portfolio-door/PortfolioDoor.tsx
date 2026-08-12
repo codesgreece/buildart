@@ -223,9 +223,25 @@ function DoorPortal({
 
 export function PortfolioDoor() {
   const [open, setOpen] = useState(false);
+  const [opening, setOpening] = useState(false);
   const [hover, setHover] = useState({ x: 0.5, y: 0.5 });
   const [active, setActive] = useState(0);
   const step = STEPS[active];
+
+  const startOpen = () => {
+    if (opening || open) return;
+    setOpening(true);
+    window.setTimeout(() => {
+      setOpen(true);
+      setOpening(false);
+    }, 980);
+  };
+
+  const closeDoor = () => {
+    setOpen(false);
+    setOpening(false);
+    setActive(0);
+  };
 
   return (
     <section
@@ -239,8 +255,8 @@ export function PortfolioDoor() {
               key="door"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0, scale: 1.03 }}
-              transition={{ duration: 0.6, ease: EASE_PHYSICAL }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.45, ease: EASE_PHYSICAL }}
               className="mx-auto max-w-3xl"
             >
               <div className="mb-4 text-center sm:mb-5">
@@ -250,69 +266,122 @@ export function PortfolioDoor() {
                 </h2>
               </div>
 
-              <button
-                type="button"
-                className="group relative mx-auto flex h-[180px] w-full max-w-md touch-manipulation items-center justify-center overflow-hidden border border-white/10 focus-ring sm:h-[240px] sm:max-w-xl"
-                onClick={() => setOpen(true)}
-                onPointerMove={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setHover({
-                    x: (e.clientX - rect.left) / rect.width,
-                    y: (e.clientY - rect.top) / rect.height,
-                  });
-                }}
-                aria-label="Άνοιξε την πόρτα για να δεις τη διαδικασία BUILDART"
-              >
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: `
-                      linear-gradient(90deg, #0a0c10 0%, #161a22 18%, #1c222c 50%, #161a22 82%, #0a0c10 100%),
-                      linear-gradient(180deg, #12161c, #0a0c10)
-                    `,
+              <div className="mx-auto flex w-full max-w-md flex-col items-center sm:max-w-xl">
+                <button
+                  type="button"
+                  disabled={opening}
+                  className="group relative flex h-[168px] w-full touch-manipulation items-center justify-center overflow-visible border border-white/10 focus-ring disabled:cursor-wait sm:h-[220px]"
+                  onClick={startOpen}
+                  onPointerMove={(e) => {
+                    if (opening) return;
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    setHover({
+                      x: (e.clientX - rect.left) / rect.width,
+                      y: (e.clientY - rect.top) / rect.height,
+                    });
                   }}
-                />
-                <div className="absolute inset-0 arch-grid opacity-20" />
-
-                <div
-                  className="pointer-events-none absolute inset-0 transition-opacity duration-300"
-                  style={{
-                    background: `radial-gradient(circle at ${hover.x * 100}% ${hover.y * 100}%, rgba(255,255,255,0.12), transparent 35%)`,
-                  }}
-                />
-
-                <motion.div
-                  className="relative z-10 h-[78%] w-[28%] min-w-[110px] max-w-[140px] border border-white/20 bg-[#151a22]"
-                  style={{
-                    boxShadow: `
-                      inset ${-20 + hover.x * 40}px 0 40px rgba(255,255,255,${0.03 + hover.x * 0.04}),
-                      0 16px 40px rgba(0,0,0,0.45)
-                    `,
-                  }}
-                  whileHover={{ scale: 1.015 }}
+                  aria-label="Άνοιξε την πόρτα για να δεις τη διαδικασία BUILDART"
                 >
-                  <div className="absolute inset-2.5 grid grid-rows-3 gap-1.5 sm:inset-3 sm:gap-2">
-                    <div className="border border-white/10" />
-                    <div className="border border-white/10" />
-                    <div className="border border-white/10" />
-                  </div>
-                  <div className="absolute right-3 top-1/2 h-10 w-1.5 -translate-y-1/2 rounded-full bg-[var(--ba-accent)] shadow-[0_0_16px_rgba(10,158,199,0.35)]" />
-                  <div className="absolute left-1/2 top-4 -translate-x-1/2 font-mono-arch text-[8px] tracking-[0.28em] text-white/35">
-                    BUILDART
-                  </div>
-                </motion.div>
+                  {/* Hallway */}
+                  <div
+                    className="absolute inset-0 overflow-hidden"
+                    style={{
+                      background: `
+                        linear-gradient(90deg, #0a0c10 0%, #161a22 18%, #1c222c 50%, #161a22 82%, #0a0c10 100%),
+                        linear-gradient(180deg, #12161c, #0a0c10)
+                      `,
+                    }}
+                  />
+                  <div className="absolute inset-0 overflow-hidden arch-grid opacity-20" />
 
-                <span className="absolute bottom-3 left-1/2 z-20 -translate-x-1/2 font-mono-arch text-[10px] tracking-[0.32em] uppercase text-white/70 transition-colors group-hover:text-[var(--ba-accent)] sm:bottom-4">
+                  {/* Light behind door as it opens */}
+                  <motion.div
+                    className="pointer-events-none absolute inset-0 overflow-hidden"
+                    initial={false}
+                    animate={{
+                      opacity: opening ? 1 : 0.15 + hover.x * 0.08,
+                    }}
+                    transition={{ duration: 0.7, ease: EASE_PHYSICAL }}
+                    style={{
+                      background: opening
+                        ? "radial-gradient(ellipse at 50% 55%, rgba(10,158,199,0.35), rgba(255,255,255,0.06) 42%, transparent 70%)"
+                        : `radial-gradient(circle at ${hover.x * 100}% ${hover.y * 100}%, rgba(255,255,255,0.12), transparent 35%)`,
+                    }}
+                  />
+
+                  {/* Door frame / threshold */}
+                  <div
+                    className="relative z-10 flex h-[82%] w-[34%] min-w-[120px] max-w-[150px] items-stretch justify-center"
+                    style={{ perspective: "1100px" }}
+                  >
+                    <div className="absolute inset-0 border border-white/15 bg-black/25" />
+
+                    {/* Door leaf — hinged on left */}
+                    <motion.div
+                      className="relative z-10 h-full w-full origin-left border border-white/20 bg-[#151a22]"
+                      style={{
+                        transformStyle: "preserve-3d",
+                        boxShadow: opening
+                          ? "-22px 12px 42px rgba(0,0,0,0.55)"
+                          : `
+                            inset ${-20 + hover.x * 40}px 0 40px rgba(255,255,255,${0.03 + hover.x * 0.04}),
+                            0 16px 40px rgba(0,0,0,0.45)
+                          `,
+                      }}
+                      initial={false}
+                      animate={{
+                        rotateY: opening ? -72 : 0,
+                      }}
+                      transition={{
+                        duration: 0.95,
+                        ease: EASE_PHYSICAL,
+                      }}
+                      whileHover={opening ? undefined : { scale: 1.01 }}
+                    >
+                      {/* Front face */}
+                      <div className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
+                        <div className="absolute inset-2.5 grid grid-rows-3 gap-1.5 sm:inset-3 sm:gap-2">
+                          <div className="border border-white/10" />
+                          <div className="border border-white/10" />
+                          <div className="border border-white/10" />
+                        </div>
+                        <div className="absolute right-3 top-1/2 h-10 w-1.5 -translate-y-1/2 rounded-full bg-[var(--ba-accent)] shadow-[0_0_16px_rgba(10,158,199,0.35)]" />
+                        <div className="absolute left-1/2 top-4 -translate-x-1/2 font-mono-arch text-[8px] tracking-[0.28em] text-white/35">
+                          BUILDART
+                        </div>
+                      </div>
+
+                      {/* Edge thickness hint while swinging */}
+                      <div
+                        className="absolute inset-y-0 right-0 w-[3px] bg-[#0c1016]"
+                        style={{
+                          transform: "translateZ(1px)",
+                          opacity: opening ? 0.9 : 0,
+                        }}
+                      />
+                    </motion.div>
+                  </div>
+                </button>
+
+                <motion.p
+                  className="mt-3 font-mono-arch text-[10px] tracking-[0.32em] uppercase text-white/65 sm:mt-4 sm:text-[11px]"
+                  initial={false}
+                  animate={{
+                    opacity: opening ? 0 : 1,
+                    y: opening ? 6 : 0,
+                  }}
+                  transition={{ duration: 0.35 }}
+                >
                   Άνοιξε
-                </span>
-              </button>
+                </motion.p>
+              </div>
             </motion.div>
           ) : (
             <motion.div
               key="process"
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.9, ease: EASE_PHYSICAL }}
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: EASE_PHYSICAL }}
             >
               <div className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-4">
                 <div>
@@ -323,7 +392,7 @@ export function PortfolioDoor() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setOpen(false)}
+                  onClick={closeDoor}
                   className="ba-button-light ba-button focus-ring !px-4 !py-2.5 touch-manipulation self-start sm:self-auto"
                 >
                   Κλείσε την πόρτα
