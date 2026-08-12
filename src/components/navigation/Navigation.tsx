@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { BuildartLogo } from "@/components/shared/BuildartLogo";
 import { MagneticLink } from "@/components/shared/MagneticButton";
-import { NAV_LINKS } from "@/data/products";
+import { CONTACT, NAV_LINKS } from "@/data/products";
 import { cn } from "@/lib/cn";
 import { EASE_PHYSICAL } from "@/lib/easing";
 
@@ -60,6 +60,15 @@ export function Navigation({ visible }: { visible: boolean }) {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <a
+              href={`tel:${CONTACT.phone}`}
+              className="focus-ring inline-flex min-h-11 touch-manipulation items-center gap-2 px-2 font-mono-arch text-[0.7rem] tracking-[0.12em] text-[var(--ba-ink-soft)] transition-colors hover:text-[var(--ba-accent)] sm:px-3 sm:text-[0.72rem] sm:tracking-[0.14em]"
+              aria-label={`Κάλεσε στο ${CONTACT.phoneDisplay}`}
+            >
+              <PhoneIcon className="h-4 w-4 shrink-0 text-[var(--ba-accent)]" />
+              <span className="hidden tabular-nums sm:inline">{CONTACT.phoneDisplay}</span>
+            </a>
+
             <MagneticLink
               href="#epikoinonia"
               className="hidden !px-4 !py-2.5 sm:inline-flex"
@@ -123,9 +132,16 @@ export function Navigation({ visible }: { visible: boolean }) {
                 </motion.a>
               ))}
               <a
+                href={`tel:${CONTACT.phone}`}
+                onClick={() => setOpen(false)}
+                className="ba-button-ghost ba-button mt-4 w-full touch-manipulation justify-center focus-ring"
+              >
+                Κάλεσε {CONTACT.phoneDisplay}
+              </a>
+              <a
                 href="#epikoinonia"
                 onClick={() => setOpen(false)}
-                className="ba-button mt-8 w-full touch-manipulation justify-center focus-ring sm:w-fit"
+                className="ba-button mt-3 w-full touch-manipulation justify-center focus-ring sm:w-fit"
               >
                 Ζήτησε προσφορά
               </a>
@@ -134,5 +150,23 @@ export function Navigation({ visible }: { visible: boolean }) {
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+function PhoneIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      aria-hidden
+    >
+      <path
+        d="M7.5 3.75h3.2l1.1 4.2-2 1.2a12.5 12.5 0 0 0 5.05 5.05l1.2-2 4.2 1.1v3.2a1.75 1.75 0 0 1-1.75 1.75A15.75 15.75 0 0 1 2.75 5.5 1.75 1.75 0 0 1 4.5 3.75Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
