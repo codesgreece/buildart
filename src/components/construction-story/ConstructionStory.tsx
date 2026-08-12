@@ -3,12 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion } from "framer-motion";
 import {
   ArchitecturalHouse,
   type HouseStage,
 } from "@/components/shared/ArchitecturalHouse";
 import type { ProductId } from "@/data/products";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { EASE_PHYSICAL } from "@/lib/easing";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -102,15 +104,26 @@ export function ConstructionStory() {
       steps.forEach((el, i) => {
         ScrollTrigger.create({
           trigger: el,
-          start: "top 60%",
-          end: "bottom 40%",
+          start: "top 70%",
+          end: "bottom 35%",
           onEnter: () => setActive(i),
           onEnterBack: () => setActive(i),
         });
       });
     }, rootRef);
 
-    return () => ctx.revert();
+    // Native mobile scroll needs a refresh after layout settles.
+    const refresh = () => ScrollTrigger.refresh();
+    const t = window.setTimeout(refresh, 120);
+    window.addEventListener("orientationchange", refresh);
+    window.addEventListener("resize", refresh);
+
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("orientationchange", refresh);
+      window.removeEventListener("resize", refresh);
+      ctx.revert();
+    };
   }, [reduced]);
 
   return (
@@ -120,9 +133,9 @@ export function ConstructionStory() {
       className="relative bg-[var(--ba-bg)]"
       aria-label="Η κατασκευή καθώς κάνετε scroll"
     >
-      <div className="section-pad mx-auto grid max-w-[1400px] gap-8 py-12 sm:py-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12 lg:py-20">
-        <div className="lg:sticky lg:top-24 lg:self-start">
-          <p className="eyebrow mb-3">Η κατασκευή συνεχίζεται</p>
+      <div className="section-pad mx-auto grid max-w-[1400px] gap-6 py-12 sm:gap-8 sm:py-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12 lg:py-20">
+        <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top))] z-10 self-start border-b border-[var(--ba-line)] bg-[var(--ba-bg)]/95 pb-4 backdrop-blur-sm sm:top-24 sm:border-b-0 sm:bg-transparent sm:pb-0 sm:backdrop-blur-none lg:top-24">
+          <p className="eyebrow mb-2 sm:mb-3">Η κατασκευή συνεχίζεται</p>
           <ArchitecturalHouse
             stage={step.stage}
             progress={step.stage / 5}
@@ -130,18 +143,25 @@ export function ConstructionStory() {
             timeOfDay={step.time}
             showAnnotations={step.stage < 2}
             idPrefix="story"
+            className="mx-auto max-h-[38vh] w-auto sm:max-h-none"
           />
-          <p className="mt-4 font-mono-arch text-sm tracking-[0.28em] text-[var(--ba-accent)]">
+          <p className="mt-3 font-mono-arch text-sm tracking-[0.28em] text-[var(--ba-accent)] sm:mt-4">
             {step.title}
           </p>
-          <p className="body-lg mt-2 max-w-md text-[0.95rem]">{step.body}</p>
+          <p className="body-lg mt-1.5 hidden max-w-md text-[0.95rem] sm:mt-2 sm:block">
+            {step.body}
+          </p>
         </div>
 
-        <div className="flex flex-col gap-[18vh] pb-10 pt-2 sm:gap-[26vh] sm:pb-[12vh] sm:pt-4 lg:gap-[32vh] lg:pb-[16vh]">
+        <div className="flex flex-col gap-[28vh] pb-[20vh] pt-2 sm:gap-[30vh] sm:pb-[14vh] sm:pt-4 lg:gap-[34vh] lg:pb-[16vh]">
           {STEPS.map((s, i) => (
-            <article
+            <motion.article
               key={s.id}
               data-story-step
+              initial={reduced ? false : { opacity: 0, y: 28 }}
+              whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.45, margin: "0px 0px -8% 0px" }}
+              transition={{ duration: 0.55, ease: EASE_PHYSICAL }}
               className={`max-w-lg border-l pl-4 transition-colors duration-500 sm:pl-5 ${
                 i === active
                   ? "border-[var(--ba-accent)]"
@@ -151,7 +171,7 @@ export function ConstructionStory() {
               <p className="eyebrow mb-2">0{i + 1}</p>
               <h2 className="headline-md">{s.title}</h2>
               <p className="body-lg mt-3 text-[0.95rem]">{s.body}</p>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>

@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import { PRODUCTS } from "@/data/products";
 import { EASE_PHYSICAL } from "@/lib/easing";
 
@@ -82,16 +81,14 @@ function ProductRow({
   product: (typeof PRODUCTS)[number];
   index: number;
 }) {
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
   const visual = VISUAL[product.id];
 
   return (
     <motion.article
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : undefined}
-      transition={{ duration: 0.8, ease: EASE_PHYSICAL, delay: 0.04 }}
+      initial={{ opacity: 0, y: 36 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3, margin: "0px 0px -12% 0px" }}
+      transition={{ duration: 0.7, ease: EASE_PHYSICAL, delay: 0.04 }}
       className="grid gap-4 border-t border-[var(--ba-line)] py-6 md:grid-cols-[0.15fr_1fr_0.75fr] md:items-center md:gap-8 md:py-7"
     >
       <p className="font-mono-arch text-xs tracking-[0.25em] text-[var(--ba-muted)]">

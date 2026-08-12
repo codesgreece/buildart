@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import { CONTACT } from "@/data/products";
 import { EASE_PHYSICAL } from "@/lib/easing";
 
@@ -24,13 +23,9 @@ const MOMENTS = [
 ];
 
 export function CompanyStory() {
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15% 0px" });
-
   return (
     <section
       id="istoria"
-      ref={ref}
       className="relative overflow-hidden border-t border-[var(--ba-line)] bg-[var(--ba-bg-elevated)] py-16 sm:py-20"
     >
       <div className="section-pad mx-auto max-w-[1200px]">
@@ -39,7 +34,8 @@ export function CompanyStory() {
             <p className="eyebrow mb-2">Η Buildart</p>
             <motion.h2
               initial={{ opacity: 0, y: 24 }}
-              animate={inView ? { opacity: 1, y: 0 } : undefined}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.8, ease: EASE_PHYSICAL }}
               className="font-display text-[clamp(3.5rem,11vw,7rem)] leading-[0.85] tracking-[-0.05em]"
             >
@@ -59,12 +55,13 @@ export function CompanyStory() {
             {MOMENTS.map((m, i) => (
               <motion.article
                 key={m.year}
-                initial={{ opacity: 0, x: 30 }}
-                animate={inView ? { opacity: 1, x: 0 } : undefined}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.4, margin: "0px 0px -8% 0px" }}
                 transition={{
-                  duration: 0.75,
+                  duration: 0.65,
                   ease: EASE_PHYSICAL,
-                  delay: 0.12 * i,
+                  delay: 0.06 * i,
                 }}
                 className="border-l border-[var(--ba-line)] pl-5"
               >
@@ -80,7 +77,7 @@ export function CompanyStory() {
           </div>
         </div>
 
-        <div className="mt-12 grid gap-3 border-t border-[var(--ba-line)] pt-7 sm:grid-cols-3 sm:mt-14 sm:gap-4 sm:pt-8">
+        <div className="mt-12 grid gap-3 border-t border-[var(--ba-line)] pt-7 sm:mt-14 sm:grid-cols-3 sm:gap-4 sm:pt-8">
           {[
             "Ποιότητα πριν και μετά την πώληση",
             "Γνωστοί κατασκευαστές",
